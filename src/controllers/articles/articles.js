@@ -1,56 +1,90 @@
+const ArticleModels = require("../../models").Article;
+
 // READ / GET
-const getAllArticle = (req, res) => {
-  const data = [
-    {
-      id: 1,
-      title: "ReactJS",
-      content: "Belajar ReactJS!",
-      date: "2023-11-06",
-    },
-    {
-      id: 2,
-      title: "ExpressJS",
-      content: "Belajar ExpressJS!",
-      date: "2023-11-06",
-    },
-  ];
-  res.send({
-    message: "GET all articles success",
-    data: data,
-  });
+const getAllArticle = async (req, res) => {
+  try {
+    const Articles = await ArticleModels.findAll();
+
+    res.status(200).json(Articles);
+  } catch (error) {
+    res.status(500).json({
+      message: "error get all articles",
+    });
+  }
 };
 
 // CREATE
-const createNewArticle = (req, res) => {
-  // console.log(req.body);
-  res.send({
-    message: "CREATE new article success",
-    data: req.body,
-  });
+const createNewArticle = async (req, res) => {
+  try {
+    const { id, title, content, author } = req.body;
+
+    const newArticleData = {
+      id: id,
+      title: title,
+      content: content,
+      author: author,
+    };
+
+    const newArticle = await ArticleModels.create(newArticleData);
+
+    res.status(201).json({
+      message: "new article created",
+      article: newArticle,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "internal server error",
+    });
+  }
 };
 
 // UPDATE
-const updateArticle = (req, res) => {
-  const { id } = req.params;
-  // console.log(id);
-  res.send({
-    message: "UPDATE article success",
-    data: req.body,
-  });
+const updateArticle = async (req, res) => {
+  try {
+    const { articleId } = req.params;
+    const { title, content, author } = req.body;
+
+    const updateArticleData = {
+      title: title,
+      content: content,
+      author: author,
+    };
+
+    const updateArticle = await ArticleModels.update(updateArticleData, {
+      where: {
+        id: articleId,
+      },
+    });
+
+    res.status(200).json({
+      message: "update article success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "internal server error",
+    });
+  }
 };
 
 // DELETE
-const deleteArticle = (req, res) => {
-  const { id } = req.params;
-  res.send({
-    message: "DELETE article success",
-    data: {
-      id: id,
-      title: "ReactJS",
-      content: "Belajar ReactJS!",
-      date: "2023-11-06",
-    },
-  });
+const deleteArticle = async (req, res) => {
+  try {
+    const { articleId } = req.params;
+
+    await ArticleModels.destroy({
+      where: {
+        id: articleId,
+      },
+    });
+
+    res.status(200).json({
+      message: "delete article success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "internal server error",
+    });
+  }
 };
 
 module.exports = {

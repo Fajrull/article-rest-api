@@ -14,13 +14,13 @@ routes.post(
   ArticleControllers.createNewArticle
 );
 
-// READ - GET
+// READ - PATCH
 routes.get("/", ArticleControllers.getAllArticle);
 
-// UPDATE - PATCH
-routes.patch("/:id", ArticleControllers.updateArticle);
+// UPDATE - PUT
+routes.patch("/:articleId", ArticleControllers.updateArticle);
 
 // DELETE - DELETE
-routes.delete("/:id", ArticleControllers.deleteArticle);
+routes.delete("/:articleId", ArticleControllers.deleteArticle);
 
 module.exports = routes;
